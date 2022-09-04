@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
-    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org/">
+    <meta charset="UTF-8" >
     <title>商品信息查询</title>
-
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="/js/tools.js"></script>
 </head>
@@ -127,7 +126,7 @@
 
     $("#pageinfo").on("click", "a", function(){
         var query = getQuery();
-        query = query + "&pno="+this.innerHTML;
+        query = query + "&pageno="+this.innerHTML;
         console.log(this.innerHTML);
         var colname = $.getUrlParam('ordercol');
         var order = $.getUrlParam('order') == null? 0 : $.getUrlParam('order');
