@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org/">
     <title>商品信息查询</title>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="/js/tools.js"></script>
 </head>
 <body>
 <div>
     <div>
        <form action="" method="get">
-           <select name="cid" >
+           <select name="cid"  id="cid">
                <option value="0">所有分类</option>
-               <option th:value="${c.cid}"  th:each="c:${cs}">[[${c.cname}]]</option>
+               <option th:value="${c.cid}"  th:each="c:${cs}" th:selected="${#strings.equals(c.cid, param.cid)}">[[${c.cname}]]</option>
            </select>
-           <select name="bid">
+           <select name="bid" id="bid">
                <option value="0">所有品牌</option>
-               <option th:value="${b.bid}" th:each="b:${bs}">[[${b.bname}]]</option>
+               <option th:value="${b.bid}" th:each="b:${bs}" th:selected="${#strings.equals(b.bid, param.bid)}">[[${b.bname}]]</option>
            </select>
-          关键字：<input type="text" name="keyword" placeholder="支持商品名称/货号模糊查询">
+          关键字：<input type="text" name="keyword" placeholder="支持商品名称/货号模糊查询" id="keyword">
                <button>搜索</button>
            </select>
        </form>
+        <button id="priceasc">按价格升序查询</button>
+        <button id="pricedesc">按价格降序查询</button>
     </div>
    <table width="1000" border="1">
        <tr>
            <th><input type="checkbox">编号</th>
            <th>商品名称</th>
-           <th>货号</th>
+           <th  id="numorder" title="0">货号↑</th>
            <th>价格</th>
            <th>上架</th>
            <th>精品</th>
@@ -58,17 +63,21 @@
    </table>
 
    <div>
-    <span class="info1">
-      共[[${info.total}]]条记录，共[[${info.pages}]]页，当前第[[${info.current}]]页
-    </span>
-       <span class="info2">
-      <select id="psize">
-        <option value="3" th:selected="${info.size == 3}">每页3条</option>
-         <option value="5" th:selected="${info.size == 5}">每页5条</option>
-         <option value="10" th:selected="${info.size == 10}">每页10条</option>
-         <option value="15" th:selected="${info.size == 15}">每页15条</option>
-      </select>
-    </span>
+<!--    <span class="info1">-->
+<!--      共[[${info.total}]]条记录，共[[${info.pages}]]页，当前第[[${info.current}]]页-->
+<!--    </span>-->
+<!--       <span class="info2">-->
+<!--      <select id="psize">-->
+<!--        <option value="3" th:selected="${info.size == 3}">每页3条</option>-->
+<!--         <option value="5" th:selected="${info.size == 5}">每页5条</option>-->
+<!--         <option value="10" th:selected="${info.size == 10}">每页10条</option>-->
+<!--         <option value="15" th:selected="${info.size == 15}">每页15条</option>-->
+<!--      </select>-->
+<!--    </span>-->
+       <div id="pageinfo">
+           共[[${info.total}]]条记录， 共[[${info.pages}]]页
+           <a href="" th:each="index:${#numbers.sequence(1,info.pages)}">[[${index}]]</a>
+       </div>
 <!--       <span class="info2" th:if="${info.prepage!=0}">-->
 <!--      <a th:href="|/getall2?pno=${info.prepage}&psize=${info.size}|">上一页</a>-->
 <!--    </span>-->
@@ -84,9 +93,54 @@
 </div>
 </body>
 
+<!--<script>-->
+<!--    document.querySelector("#psize").onchange = function(){-->
+<!--        location.href="/find3?psize="+this.value;-->
+<!--    }-->
+<!--</script>-->
 <script>
-    document.querySelector("#psize").onchange = function(){
-        location.href="/find3?psize="+this.value;
+    $('#numorder').on('click', function(){
+        if(this.title == 0){
+            sortAsc(2);
+        }else{
+            sortDesc(2);
+        }
+        this.title = this.title == 1 ? 0 : 1;
+        this.innerHTML = this.title == 1 ?"货号↑":"货号↓";
+    });
+
+    $("#priceasc").click(function(){
+        var query = getQuery();
+        query = query + "&ordercol=price&order=0";
+        location.href="/find3"+query;
+    })
+
+    $("#pricedesc").click(function(){
+        var query = getQuery();
+        query = query + "&ordercol=price&order=1";
+        location.href="/find3"+query;
+    })
+    function getQuery(){
+        var query = "?cid="+$("#cid").val()+"&bid="+$("#bid").val()+"&keyword="+$("#keyword").val();
+        return query;
     }
+
+    $("#pageinfo").on("click", "a", function(){
+        var query = getQuery();
+        query = query + "&pno="+this.innerHTML;
+        console.log(this.innerHTML);
+        var colname = $.getUrlParam('ordercol');
+        var order = $.getUrlParam('order') == null? 0 : $.getUrlParam('order');
+        console.log(colname, order);
+        if(colname !=null){
+            query += "&ordercol="+colname+"&order="+order;
+        }
+        location.href="/find3"+query;
+        return false;
+    });
+
+    $("#cid").change(function(){
+        location.href="/find3"+getQuery();
+    })
 </script>
 </html>
