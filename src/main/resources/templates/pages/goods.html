@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org/">
+    <title>商品信息查询</title>
+</head>
+<body>
+<div>
+    <div>
+       <form action="" method="get">
+           <select name="cid" >
+               <option value="0">所有分类</option>
+               <option th:value="${c.cid}"  th:each="c:${cs}">[[${c.cname}]]</option>
+           </select>
+           <select name="bid">
+               <option value="0">所有品牌</option>
+               <option th:value="${b.bid}" th:each="b:${bs}">[[${b.bname}]]</option>
+           </select>
+          关键字：<input type="text" name="keyword" placeholder="支持商品名称/货号模糊查询">
+               <button>搜索</button>
+           </select>
+       </form>
+    </div>
+   <table width="1000" border="1">
+       <tr>
+           <th><input type="checkbox">编号</th>
+           <th>商品名称</th>
+           <th>货号</th>
+           <th>价格</th>
+           <th>上架</th>
+           <th>精品</th>
+           <th>新品</th>
+           <th>热销</th>
+           <th>点击次数</th>
+           <th>库存</th>
+           <th>操作</th>
+       </tr>
+    <tr th:each="good:${info.records}">
+        <td><input type="checkbox">[[${good.gid}]]</td>
+        <td>[[${good.gname}]]</td>
+        <td>[[${good.number}]]</td>
+        <td>[[${good.price}]]</td>
+        <td><img th:src="${good.grounding == 1 ?'/img/dui.png':'/img/cuo.png'}"></td>
+        <td><img th:src="${good.article == 1 ?'/img/dui.png':'/img/cuo.png'}"></td>
+        <td><img th:src="${good.gnew == 1 ?'/img/dui.png':'/img/cuo.png'}"></td>
+        <td><img th:src="${good.hot == 1 ?'/img/dui.png':'/img/cuo.png'}"></td>
+        <td>[[${good.click}]]</td>
+        <td>[[${good.stock}]]</td>
+        <td>
+<!--            <a th:href="">查看详细信息</a>-->
+<!--            <a th:href="">修改</a>-->
+<!--            <a th:href="''">删除</a>-->
+        </td>
+    </tr>
+
+
+
+   </table>
+
+   <div>
+    <span class="info1">
+      共[[${info.total}]]条记录，共[[${info.pages}]]页，当前第[[${info.current}]]页
+    </span>
+       <span class="info2">
+      <select id="psize">
+        <option value="3" th:selected="${info.size == 3}">每页3条</option>
+         <option value="5" th:selected="${info.size == 5}">每页5条</option>
+         <option value="10" th:selected="${info.size == 10}">每页10条</option>
+         <option value="15" th:selected="${info.size == 15}">每页15条</option>
+      </select>
+    </span>
+<!--       <span class="info2" th:if="${info.prepage!=0}">-->
+<!--      <a th:href="|/getall2?pno=${info.prepage}&psize=${info.size}|">上一页</a>-->
+<!--    </span>-->
+
+<!--       <span class="info2" th:each="index:${#numbers.sequence(1,info.pages)} ">-->
+<!--      <a th:href="|/getall2?pno=${index}&psize=${info.size}|">[[${index}]]</a>-->
+<!--    </span>-->
+
+<!--       <span class="info2" th:if="${info.current < info.pages} ">-->
+<!--      <a th:href="|/getall2?pno=${info.nextpage}&psize=${info.size}|">下一页</a>-->
+<!--    </span>-->
+   </div>
+</div>
+</body>
+
+<script>
+    document.querySelector("#psize").onchange = function(){
+        location.href="/find3?psize="+this.value;
+    }
+</script>
+</html>

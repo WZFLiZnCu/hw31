@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org/">
+    <title>Title</title>
+</head>
+<body>
+   <table width="400px" border="1px">
+       <tr>
+           <th>编号</th>
+           <th>商品名称</th>
+           <th>货号</th>
+           <th>价格</th>
+           <th>上架</th>
+           <th>精品</th>
+           <th>新品</th>
+           <th>热销</th>
+           <th>点击次数</th>
+           <th>库存</th>
+           <th>操作</th>
+       </tr>
+    <tr th:each="good:${info}">
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gname}]]</td>
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gid}]]</td>
+        <td>[[${good.gid}]]</td>
+    </tr>
+
+
+
+   </table>
+</body>
+</html>

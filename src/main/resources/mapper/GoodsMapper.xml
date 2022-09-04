@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace：名称空间；写接口的全类名，相当于告诉MyBatis这个配置文件是实现哪个接口的；  -->
+<mapper namespace="com.hw31.mapper.GoodsMapper" >
+<resultMap id="goodsMap" type="goods" autoMapping="true">
+    <id column="gid" property="gid"></id>
+    <id column="new" property="gnew"></id>
+    <association property="classify" javaType="classify" autoMapping="true">
+        <id column="cid" property="cid"></id>
+    </association>
+    <association property="brand" javaType="brand" autoMapping="true">
+        <id column="bid" property="bid"></id>
+    </association>
+</resultMap>
+<!--    public List<Goods> getAllGoods();-->
+    <select id="getAllGoods" resultMap="goodsMap">
+        select g.*,c.*,b.* from goods g left join classify c on g.cid=c.cid
+         left join brand b on g.bid=b.bid
+    </select>
+<!--    public List<Goods> getAllGoodsByPage(@Param("index")int startIndex, @Param("count")int count);-->
+    <select id="getAllGoodsByPage" resultMap="goodsMap">
+        select g.*,c.*,b.* from goods g left join classify c on g.cid=c.cid
+       left join brand b on g.bid=b.bid
+        limit #{index},#{count}
+    </select>
+</mapper>
